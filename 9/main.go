@@ -22,20 +22,6 @@ var edges = []edge{}
 //0       1  2       3  4
 //Faerun to Tristram = 65
 
-type queue []edge
-
-func (q queue) Len() int {
-	return len(q)
-}
-
-func (q queue) Less(i, j int) bool {
-	return q[i].d < q[j].d
-}
-
-func (q queue) Swap(i, j int) {
-	q[i], q[j] = q[j], q[i]
-}
-
 func main() {
 
 	in := bufio.NewScanner(os.Stdin)
@@ -96,13 +82,3 @@ func score(path []edge) int {
 	}
 	return total
 }
-
-//type Interface interface {
-//	// Len is the number of elements in the collection.
-//	Len() int
-//	// Less reports whether the element with
-//	// index i should sort before the element with index j.
-//	Less(i, j int) bool
-//	// Swap swaps the elements with indexes i and j.
-//	Swap(i, j int)
-//}
