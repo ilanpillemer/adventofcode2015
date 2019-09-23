@@ -1,0 +1,1 @@
+cat part.in | grep 'pomeranians: 3' |  grep 'perfumes: 1'
