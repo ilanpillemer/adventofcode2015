@@ -65,13 +65,12 @@ var Cinnamon = ing{
 	cal: 3,
 }
 
-
 func main() {
 
-//fmt.Println(scoreTest(44,56))
+	//fmt.Println(scoreTest(44,56))
 	max := 0
 	for i := 1; i < 100; i++ {
-		        for j := 1; j < 100; j++ {
+		for j := 1; j < 100; j++ {
 			for k := 1; k < 100; k++ {
 				for l := 1; l < 100; l++ {
 					if i+j+k+l == 100 {
@@ -101,16 +100,15 @@ func scoreTest(f, c int) int {
 	return val(capacity) * val(durability) * val(flavor) * val(texture)
 }
 
-
 func score(f, c, b, s int) int {
 	capacity := frosting.cap*f + candy.cap*c + butters.cap*b + sugar.cap*s
 	durability := frosting.dur*f + candy.dur*c + butters.dur*b + sugar.dur*s
 	flavor := frosting.fla*f + candy.fla*c + butters.fla*b + sugar.fla*s
 	texture := frosting.tex*f + candy.tex*c + butters.tex*b + sugar.tex*s
-	cal:=  frosting.cal*f + candy.cal*c + butters.cal*b + sugar.cal*s
+	cal := frosting.cal*f + candy.cal*c + butters.cal*b + sugar.cal*s
 
 	if cal != 500 {
-	return 0
+		return 0
 	}
 
 	return val(capacity) * val(durability) * val(flavor) * val(texture)
