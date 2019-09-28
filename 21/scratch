@@ -1,0 +1,46 @@
+Weapons:    Cost  Damage  Armor
+Dagger        8     4       0
+Shortsword   10     5       0
+Warhammer    25     6       0
+Longsword    40     7       0
+Greataxe     74     8       0
+
+Armor:      Cost  Damage  Armor
+Leather      13     0       1
+Chainmail    31     0       2
+Splintmail   53     0       3
+Bandedmail   75     0       4
+Platemail   102     0       5
+
+Rings:      Cost  Damage  Armor
+Damage +1    25     1       0
+Damage +2    50     2       0
+Damage +3   100     3       0
+Defense +1   20     0       1
+Defense +2   40     0       2
+Defense +3   80     0       3
+
+74 + 13 = 87
+40 + 53 = 93
+74 + 25 = 96
+
+cheapest way to get 8 / 1
+40 + 25 = 65 + 13 = 78
+
+PLatemail + Damage + 3 + Dmage + 1
+102 + 100 + 25 = 202 + 25 = 227 :(
+
+armour    weapon   ring   ring
+102        -       100    25    X
+102                80     50    : 80 + 50 = 130 -> 130 + 102 = 232
+
+YOU MUST BUY ONE WEAPON
+
+1 : 74
+2 : 40 + 40 = 80
+3 : 25 + 80 = 105
+4 : 10 + 80 + 20 = 90 + 20 = 110
+  : 8 + 25 + 80 = 105 + 8 = 113
+5 : 8 +
+
+8 + 100 + 40 = 148
