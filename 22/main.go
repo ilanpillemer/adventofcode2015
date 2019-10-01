@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"os"
 )
 
 type player struct {
@@ -57,39 +56,22 @@ func main() {
 	flag.Parse()
 	//	example3()
 	//	os.Exit(0)
-	part2()
-	os.Exit(0)
+	//	part2()
+	//	os.Exit(0)
 
 	min := 10000000
 	p, b, effects := ini()
 	over := false
-	for i := 0; i < 10000000; i++ {
+	for i := 0; i < 20000000; i++ {
 	fight:
 		for {
 			options := possible(p, effects)
 			if len(options) == 0 {
-				if over = turn(None, p, b, effects); over {
-					if b.hp <= 0 {
-						if *verbose {
-							fmt.Println("spent", p.spent)
-						}
-						if p.spent < min {
-							min = p.spent
-							fmt.Println(min)
-						}
-						if *verbose {
-							fmt.Println("min", min)
-						}
-						p, b, effects = ini()
-						break fight
-					}
-					// try again
-					if *verbose {
-						fmt.Println("TRY AGAIN")
-					}
-					p, b, effects = ini()
+				// try again
+				if *verbose {
+					fmt.Println("TRY AGAIN")
 				}
-
+				p, b, effects = ini()
 			}
 			for k, _ := range options {
 				if over = turn(k, p, b, effects); over {
