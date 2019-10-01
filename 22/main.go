@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 )
 
 type player struct {
@@ -56,46 +57,25 @@ func main() {
 	flag.Parse()
 	//	example3()
 	//	os.Exit(0)
+	part2()
+	os.Exit(0)
 
 	min := 10000000
 	p, b, effects := ini()
 	over := false
-	for i := 0; i < 100000000; i++ {
+	for i := 0; i < 10000000; i++ {
 	fight:
 		for {
-			options := possible(effects)
-
-			if p.mana < 53 {
-				delete(options, MagicMissile)
-			}
-			if p.mana < 73 {
-				delete(options, Drain)
-			}
-			if p.mana < 113 {
-				delete(options, Shield)
-			}
-			if p.mana < 173 {
-				delete(options, Poison)
-			}
-			if p.mana < 229 {
-				delete(options, Recharge)
-			}
+			options := possible(p, effects)
 			if len(options) == 0 {
-				if *verbose {
-					fmt.Println("TRY AGAIN")
-				}
-				p, b, effects = ini()
-				continue
-			}
-			for k, _ := range options {
-
-				if over = turn(k, p, b, effects); over {
+				if over = turn(None, p, b, effects); over {
 					if b.hp <= 0 {
 						if *verbose {
 							fmt.Println("spent", p.spent)
 						}
 						if p.spent < min {
 							min = p.spent
+							fmt.Println(min)
 						}
 						if *verbose {
 							fmt.Println("min", min)
@@ -109,31 +89,29 @@ func main() {
 					}
 					p, b, effects = ini()
 				}
-				if p.mana < 53 {
-					delete(options, MagicMissile)
-				}
-				if p.mana < 73 {
-					delete(options, Drain)
-				}
-				if p.mana < 113 {
-					delete(options, Shield)
-				}
-				if p.mana < 173 {
-					delete(options, Poison)
-				}
-				if p.mana < 229 {
-					delete(options, Recharge)
-				}
-				if len(options) == 0 {
+
+			}
+			for k, _ := range options {
+				if over = turn(k, p, b, effects); over {
+					if b.hp <= 0 {
+						if *verbose {
+							fmt.Println("spent", p.spent)
+						}
+						if p.spent < min {
+							min = p.spent
+							fmt.Println(min)
+						}
+						if *verbose {
+							fmt.Println("min", min)
+						}
+						p, b, effects = ini()
+						break fight
+					}
+					// try again
 					if *verbose {
 						fmt.Println("TRY AGAIN")
 					}
 					p, b, effects = ini()
-					break fight
-				}
-				if p.spent >= 973 {
-					p, b, effects = ini()
-					break fight
 				}
 
 			}
@@ -185,10 +163,57 @@ func example3() {
 	fmt.Println(p.spent)
 }
 
-func possible(effects map[spell]timer) map[spell]bool {
+func part1() {
+	p, b, effects := ini()
+	turn(Poison, p, b, effects)
+	turn(Recharge, p, b, effects)
+	turn(Shield, p, b, effects)
+	turn(Poison, p, b, effects)
+	turn(MagicMissile, p, b, effects)
+	turn(MagicMissile, p, b, effects)
+	turn(MagicMissile, p, b, effects)
+	turn(MagicMissile, p, b, effects)
+	fmt.Println(p.spent)
+}
+
+//Poison -> Recharge -> Shield -> Poison -> Recharge -> Drain -> Poison -> Drain -> Magic Missile
+func part2() {
+	p, b, effects := ini()
+	turn(Poison, p, b, effects)
+	turn(Recharge, p, b, effects)
+	turn(Shield, p, b, effects)
+	turn(Poison, p, b, effects)
+	turn(Recharge, p, b, effects)
+	turn(Drain, p, b, effects)
+	turn(Poison, p, b, effects)
+	turn(MagicMissile, p, b, effects)
+
+	fmt.Println(p.spent)
+}
+func possible(p *player, effects map[spell]timer) map[spell]bool {
 	options := map[spell]bool{MagicMissile: true, Drain: true, Shield: true, Poison: true, Recharge: true}
 	for k, _ := range effects {
 		delete(options, k)
+	}
+	score := p.mana
+	if _, ok := effects[Recharge]; ok {
+		score += 101
+	}
+
+	if score < 53 {
+		delete(options, MagicMissile)
+	}
+	if score < 73 {
+		delete(options, Drain)
+	}
+	if score < 113 {
+		delete(options, Shield)
+	}
+	if score < 173 {
+		delete(options, Poison)
+	}
+	if score < 229 {
+		delete(options, Recharge)
 	}
 
 	return options
@@ -231,6 +256,10 @@ func stats(p *player, b *player) {
 }
 
 func turn(s spell, p *player, b *player, effects map[spell]timer) bool {
+	p.hp--
+	if gameover(p, b) {
+		return true
+	}
 	if *verbose {
 		fmt.Println("-- Player turn --")
 	}
