@@ -1,15 +1,14 @@
 use "buffered"
 
-interface Processable
-  fun process(l: String)
+interface Processable 
+  fun ref process(l: String)
+  fun dispose()
 
-class LineNotify
-  let _env: Env
-  var _rb: Reader
-  var _p: Processable
+class LineNotify is InputNotify
+  let _rb: Reader
+  let _p: Processable
 
-  new create(env: Env, p: Processable ) =>
-    _env = env
+  new create(p: Processable) =>
     _rb = Reader
     _p = p
 
@@ -25,6 +24,11 @@ class LineNotify
     end
 
   fun ref dispose() =>
-    None
-
+    try
+      if _rb.size() > 0 then
+        let rest: Array[U8] val = _rb.block(_rb.size())?
+        _p.process(String.from_array(rest))
+      end
+    end
+    _p.dispose()
 
