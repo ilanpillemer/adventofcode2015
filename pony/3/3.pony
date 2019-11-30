@@ -8,46 +8,46 @@ actor Main
     env.input(Director,512)
 
 class iso Director is InputNotify
- let santa:Santa = Santa
- let robo:Santa = Santa
+ let human: Deliverer = Deliverer
+ let robot: Deliverer = Deliverer
  var turn:Bool = false
 
  fun ref apply(data': Array[U8] iso) =>
    var data: Array[U8] ref = consume data'
    for d in data.values() do
        if turn then
-         santa.move(d)
+         robot.move(d)
        else
-         robo.move(d)
+         human.move(d)
        end
        turn = not turn
    end
 
   fun dispose() =>
-    let p1 = Promise[Map[String,U32]] 
-    let p2 = Promise[Map[String,U32]]
-    Promises[Map[String,U32] val].join([p1;p2].values())
-      .next[None]({(a: Array[Map[String,U32]] val) =>
-	var dedup = Map[String,U32]
-	for m in a.values() do
-	  for k in m.keys() do
-	    dedup = dedup.update(k,0)
+    let p1 = Promise[Set[String]] 
+    let p2 = Promise[Set[String]]
+    Promises[Set[String] val].join([p1;p2].values())
+      .next[None]({(a: Array[Set[String]] val) =>
+        var dedup = Set[String]
+        for m in a.values() do
+          for k in m.values() do
+            dedup = dedup.add(k)
           end
-	end
-	Debug.out(dedup.size().string())
+        end
+        Debug.out(dedup.size().string())
        })
-    robo.combine(p1)
-    santa.combine(p2)
+    robot.combine(p1)
+    human.combine(p2)
 
 
-actor Santa
+actor Deliverer
   var x: I32 = 0
   var y: I32 = 0
   
-  var map: Map[String,U32] =  Map[String,U32] 
+  var map: Set[String] =  Set[String] 
 
   new create() =>
-    map = map.update("0,0",1)
+    map = map.add("0,0")
 
   be move(d: U8) =>
     match d
@@ -57,9 +57,9 @@ actor Santa
     | 'v' => y = y + 1
     end
     var pos = x.string() + "," + y.string()
-    map = map.update(pos,1)
+    map = map.add(pos)
 
-  be combine(p: Promise[Map[String,U32]]) =>
+  be combine(p: Promise[Set[String]]) =>
     p(map)
 
   
